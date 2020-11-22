@@ -41,5 +41,5 @@
 
 <p><h3>Delete Series:</h3> Send JSON containing the series UID you wish to delete to /api/deleteSeries.php.</p>
 <p>{
-"UID": ""
+"UID": "1"
 }</p>

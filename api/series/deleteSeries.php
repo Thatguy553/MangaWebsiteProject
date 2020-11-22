@@ -5,8 +5,8 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../config/database.php';
-include_once '../class/series.php';
+include_once __DIR__.'/../../config/database.php';
+include_once __DIR__.'/../../class/series.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -15,14 +15,10 @@ $items = new Series($conn);
 
 $data = json_decode(file_get_contents("php://input"));
 
-# $items->UID = $data->UID;
-$items->Title = $data->Title;
-$items->Description = $data->Description;
-$items->Chapters = $data->Chapters;
+$items->UID = $data->UID;
 
-if ($items->insert()) {
-    echo "Series Successfully Created";
+if ($items->delete()) {
+    echo json_encode("Series Deleted.");
 } else {
-    echo "Series Could not be Created";
+    echo json_encode("Series could not be Deleted.");
 }
-?>

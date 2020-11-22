@@ -19,6 +19,7 @@ class Series
     public function __construct($db)
     {
         $this->conn = $db;
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if (!file_exists(__DIR__."/../series")) {
             mkdir(__DIR__."/../series");
         }

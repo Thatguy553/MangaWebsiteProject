@@ -5,26 +5,23 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once '../config/database.php';
-include_once '../class/series.php';
+include_once __DIR__.'/../../config/database.php';
+include_once __DIR__.'/../../class/accounting.php';
 
 $db = new Database();
 $conn = $db->connect();
 
-$items = new Series($conn);
+$acc = new Accounting($conn);
 
 $data = json_decode(file_get_contents("php://input"));
 
-$items->UID = $data->UID;
+$acc->username = $data->username;
+$acc->password = $data->password;
+$acc->role = $data->role;
 
-// Series Values
-$items->Title = $data->Title;
-$items->Description = $data->Description;
-$items->Chapters = $data->Chapters;
-
-if ($items->update()) {
-    echo json_encode("Series data updated.");
+if ($acc->signup()) {
+    echo "Signup Successful!";
 } else {
-    echo json_encode("Series data could not be updated.");
+    echo "Signup Failed...";
 }
 ?>
