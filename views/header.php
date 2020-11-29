@@ -17,19 +17,25 @@ session_start();
 
         <nav id="pub-nav">
             <ul>
-                <a href="/" class="nav-item">Home</a>
-                <a href="/serie" class="nav-item">Series</a>
-                <a href="/about" class="nav-item">About</a>
+                <a href="/" class="nav-item right">Home</a>
+                <a href="/pubSeries" class="nav-item right">Series</a>
+                <a href="/about" class="nav-item right">About</a>
                 <?php 
                 if (!$_SESSION) {
                 ?>
-                <a href="/login" class="nav-item">Login</a>
-                <a href="/signup" class="nav-item">Signup</a>
+                <a href="/login" class="nav-item left">Login</a>
+                <a href="/signup" class="nav-item left">Signup</a>
                 <?php
                 } else {
                 ?>
-                <a href="/logout" class="nav-item">Logout</a>
+                <a href="/logout" class="nav-item left">Logout</a>
                 <?php 
+                }
+                if (($_SESSION['role'] ?? "") == "Admin") {
+                ?>
+                <a href="/adminSeries" class="nav-item left">Series</a>
+                <a href="/adminChapters" class="nav-item left">Chapters</a>
+                <?php
                 }
                 ?>
             </ul>

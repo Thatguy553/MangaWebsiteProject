@@ -20,13 +20,9 @@ $acc->password = $data->password;
 
 if ($acc->login()) {
     session_start();
-    $_SESSION['user'] = $acc->username;
-    $_SESSION['pass'] = $acc->password;
-    echo "Successfully Logged in!";
-    #header('Location: ' . $_SERVER['HTTP_REFERER']);
-    #exit;
+    $_SESSION['user'] = $acc->login()['user'];
+    $_SESSION['role'] = $acc->login()['role'];
+    return true;
 } else {
-    echo "Could not log in, check your credentials.";
-    #header('Location: ' . $_SERVER['HTTP_REFERER']);
-    #exit;
+    return false;
 }

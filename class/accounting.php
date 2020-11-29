@@ -37,10 +37,15 @@ class Accounting
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 if (password_verify($this->password, $row['password'])) {
                     #session_start();
-                    $_SESSION['user'] = $row['username'];
-                    $_SESSION['pass'] = $row['password'];
-                    $_SESSION['role'] = $row['role'];
-                    return true;
+                    #$_SESSION['user'] = $row['username'];
+                    #$_SESSION['pass'] = $row['password'];
+                    #$_SESSION['role'] = $row['role'];
+                    $details = array(
+                        "user" => $row['username'],
+                        "role" => $row['role']
+                    );
+
+                    return $details;
                 } else {
                     return false;
                 }

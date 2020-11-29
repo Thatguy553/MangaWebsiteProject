@@ -21,6 +21,14 @@ $router->respond("GET", "/logout", function() {
     require __DIR__ . '/views/logout.php';
 });
 
-$router->respond("GET", "/serie", function() {
+$router->respond("GET", "/pubSeries", function() {
     require __DIR__ . '/views/series.php';
+});
+
+$router->respond("GET", "/adminSeries", function() {
+    require __DIR__ . '/administration/series.php';
+});
+
+$router->respond("GET", "/adminChapters", function() {
+    require __DIR__ . '/administration/chapters.php';
 });

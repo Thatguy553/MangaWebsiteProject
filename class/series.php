@@ -13,6 +13,7 @@ class Series
     public $Description;
     public $Chapters;
     public $Folder;
+    public $Image;
     public $Created;
 
     // Connecting...
@@ -20,15 +21,15 @@ class Series
     {
         $this->conn = $db;
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if (!file_exists(__DIR__."/../series")) {
-            mkdir(__DIR__."/../series");
+        if (!file_exists(__DIR__ . "/../series")) {
+            mkdir(__DIR__ . "/../series");
         }
     }
 
     // Grab Everything
     public function getSeries()
     {
-        $query = "SELECT UID, Title, Description, Chapters FROM " . $this->table . "";
+        $query = "SELECT * FROM " . $this->table . "";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -37,25 +38,29 @@ class Series
     // Insert Series
     public function insert()
     {
-        # "uniqid('php_'): %s\r\n" 
+
+        $this->Image = $_FILES['files'];
         $this->Folder = uniqid('series_');
-        $query = "INSERT INTO " . $this->table . " SET Title = :title, Description = :desc, Chapters = :chapters, Folder = :folder";
+        $query = "INSERT INTO " . $this->table . " SET Title = :title, Description = :desc, Chapters = :chapters, Image = :image, Folder = :folder";
         $stmt = $this->conn->prepare($query);
 
         // Sanitize
         $this->Title = htmlspecialchars(strip_tags($this->Title));
         $this->Description = htmlspecialchars(strip_tags($this->Description));
         $this->Chapters = htmlspecialchars(strip_tags($this->Chapters));
+        $this->Image['name'][0] = htmlspecialchars(strip_tags($this->Image['name'][0]));
         $this->Folder = htmlspecialchars(strip_tags($this->Folder));
 
         // Bind
         $stmt->bindParam(":title", $this->Title);
         $stmt->bindParam(":desc", $this->Description);
         $stmt->bindParam(":chapters", $this->Chapters);
+        $stmt->bindParam(":image", $this->Image['name'][0]);
         $stmt->bindParam(":folder", $this->Folder);
 
         if ($stmt->execute()) {
-            mkdir(__DIR__."/../series/" . $this->Folder);
+            mkdir(__DIR__ . "/../series/" . $this->Folder);
+            move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $this->Image['name'][0]);
             return true;
         }
         return false;
@@ -116,10 +121,10 @@ class Series
         $stmt->bindParam(1, $this->UID);
         $FolderStmt->bindParam(1, $this->UID);
 
-        if ($FolderStmt->execute()){
+        if ($FolderStmt->execute()) {
             if ($rows = $FolderStmt->fetch(PDO::FETCH_ASSOC)) {
-                array_map('unlink', glob(__DIR__."/../series/".$rows['Folder']."/*.*"));
-                if (rmdir(__DIR__."/../series/".$rows['Folder'])) {
+                array_map('unlink', glob(__DIR__ . "/../series/" . $rows['Folder'] . "/*.*"));
+                if (rmdir(__DIR__ . "/../series/" . $rows['Folder'])) {
                     if ($stmt->execute()) {
                         return true;
                     }
@@ -128,7 +133,6 @@ class Series
                 return false;
             }
         }
-        
 
         return false;
     }
