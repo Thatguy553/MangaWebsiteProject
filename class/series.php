@@ -14,6 +14,7 @@ class Series
     public $Chapters;
     public $Folder;
     public $Image;
+    public $ExistingImage;
     public $Created;
 
     // Connecting...
@@ -68,7 +69,7 @@ class Series
 
     public function search()
     {
-        $query = "SELECT UID, Title, Description, Chapters FROM " . $this->table . " WHERE UID = ?";
+        $query = "SELECT UID, Title, Description, Chapters, Image, Folder FROM " . $this->table . " WHERE UID = ?";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->UID);
@@ -79,28 +80,38 @@ class Series
             $this->Title = $rows['Title'];
             $this->Description = $rows['Description'];
             $this->Chapters = $rows['Chapters'];
+            $this->Image = $rows['Image'];
+            $this->Folder = $rows['Folder'];
         }
     }
 
     public function update()
     {
-        $query = "UPDATE " . $this->table . " SET Title = :title, Description = :desc, Chapters = :chapters WHERE UID = :uid";
+        $this->Image = $_FILES['files'];
+        $query = "UPDATE " . $this->table . " SET Title = :title, Description = :desc, Chapters = :chapters, Image = :image WHERE UID = :uid";
         $stmt = $this->conn->prepare($query);
+
+        // Image Replace
+        unlink(__DIR__ . "/../series/" . $this->Folder . "/" . $this->ExistingImage);
 
         // Sanitization
         $this->UID = htmlspecialchars(strip_tags($this->UID));
         $this->Title = htmlspecialchars(strip_tags($this->Title));
         $this->Description = htmlspecialchars(strip_tags($this->Description));
         $this->Chapters = htmlspecialchars(strip_tags($this->Chapters));
+        $this->Image['name'][0] = htmlspecialchars(strip_tags($this->Image['name'][0]));
 
         // Bind
         $stmt->bindParam(":uid", $this->UID);
         $stmt->bindParam(":title", $this->Title);
         $stmt->bindParam(":desc", $this->Description);
         $stmt->bindParam(":chapters", $this->Chapters);
+        $stmt->bindParam(":image", $this->Image['name'][0]);
 
         if ($stmt->execute()) {
-            return true;
+            if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $this->Image['name'][0])) {
+                return true;
+            }
         }
 
         return false;

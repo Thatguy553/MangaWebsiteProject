@@ -13,8 +13,6 @@ $conn = $db->connect();
 
 $items = new Series($conn);
 
-$data = json_decode(file_get_contents("php://input"));
-
 $items->UID = $_POST['uid'];
 
 if ($items->delete()) {

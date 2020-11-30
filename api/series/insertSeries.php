@@ -11,7 +11,6 @@ include_once __DIR__ . '/../../class/series.php';
 $db = new Database();
 $conn = $db->connect();
 $items = new Series($conn);
-$data = json_decode(file_get_contents("php://input"));
 
 # $items->UID = $data->UID;
 $items->Title = $_POST['title'];
