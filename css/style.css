@@ -1,0 +1,10 @@
+#series-page {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.series-image {
+  width: 300px;
+  height: 400px;
+}

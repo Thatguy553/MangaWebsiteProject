@@ -2,8 +2,8 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-include_once __DIR__.'/../../config/database.php';
-include_once __DIR__.'/../../class/series.php';
+include_once __DIR__ . '/../../config/database.php';
+include_once __DIR__ . '/../../class/series.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -24,7 +24,9 @@ if ($itemCount > 0) {
             "UID" => $UID,
             "Title" => $Title,
             "Description" => $Description,
-            "Chapters" => $Chapters);
+            "Chapters" => $Chapters,
+            "Image" => $Image,
+            "Folder" => $Folder);
 
         array_push($seriesArr["body"], $e);
     }

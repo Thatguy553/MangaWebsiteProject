@@ -94,22 +94,29 @@ include_once __DIR__ . '/../views/header.php';
             .then(res => res.json())
             .then(data => {
                 // data available here
+                if (data.body) {
+                    for (let i = 0; i < data.body.length; i++) {
+                        // Adds series to list of series information
+                        document.getElementById("series").innerHTML += "<tr class='series-item'><td>" + data.body[i]
+                            .UID + "</td><td>" +
+                            data.body[i].Title +
+                            "</td><td>" +
+                            data.body[i].Description + "</td><td>" + data.body[i].Chapters +
+                            "</td><td><button onclick='Delete(" + data.body[i].UID + ")'>Delete</button></tr>";
 
-                for (let i = 0; i < data.body.length; i++) {
-                    // Adds series to list of series information
-                    document.getElementById("series").innerHTML += "<tr class='series-item'><td>" + data.body[i]
-                        .UID + "</td><td>" +
-                        data.body[i].Title +
-                        "</td><td>" +
-                        data.body[i].Description + "</td><td>" + data.body[i].Chapters +
-                        "</td><td><button onclick='Delete(" + data.body[i].UID + ")'>Delete</button></tr>";
+                        // Adds series to Update Dropdown
+                        document.getElementById("Utitle").innerHTML += "<option id='series-" + data.body[i].UID +
+                            "' name='" + data.body[i].Title +
+                            "' value='" + data.body[i].UID + "'>" +
+                            data
+                            .body[i].Title + "</option>"
+                    }
+                } else {
+                    document.getElementById("series").innerHTML +=
+                        "<tr class='series-item'><td>No Series</td></tr>";
 
                     // Adds series to Update Dropdown
-                    document.getElementById("Utitle").innerHTML += "<option id='series-" + data.body[i].UID +
-                        "' name='" + data.body[i].Title +
-                        "' value='" + data.body[i].UID + "'>" +
-                        data
-                        .body[i].Title + "</option>"
+                    document.getElementById("Utitle").innerHTML += "<option>No Series</option>"
                 }
             });
     }

@@ -59,14 +59,21 @@ class Series
         $stmt->bindParam(":image", $this->Image['name'][0]);
         $stmt->bindParam(":folder", $this->Folder);
 
-        if ($stmt->execute()) {
-            mkdir(__DIR__ . "/../series/" . $this->Folder);
-            move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $this->Image['name'][0]);
-            return true;
+        if (mkdir(__DIR__ . "/../series/" . $this->Folder)) {
+            $temp = explode(".", $_FILES["file"]["name"]);
+            $newfilename = uniqid("img_") . '.' . end($temp);
+            if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $newfilename)) {
+                if ($stmt->execute()) {
+                    return true;
+                }
+            } else {
+                rmdir(__DIR__ . "/../series/" . $this->Folder);
+            }
         }
         return false;
     }
 
+    // Search for series according to UID
     public function search()
     {
         $query = "SELECT UID, Title, Description, Chapters, Image, Folder FROM " . $this->table . " WHERE UID = ?";
@@ -85,6 +92,7 @@ class Series
         }
     }
 
+    // Update Series
     public function update()
     {
         $this->Image = $_FILES['files'];
@@ -135,7 +143,13 @@ class Series
         if ($FolderStmt->execute()) {
             if ($rows = $FolderStmt->fetch(PDO::FETCH_ASSOC)) {
                 array_map('unlink', glob(__DIR__ . "/../series/" . $rows['Folder'] . "/*.*"));
-                if (rmdir(__DIR__ . "/../series/" . $rows['Folder'])) {
+                if (file_exists(__DIR__ . "/../series/" . $rows['Folder'])) {
+                    if (rmdir(__DIR__ . "/../series/" . $rows['Folder'])) {
+                        if ($stmt->execute()) {
+                            return true;
+                        }
+                    }
+                } else {
                     if ($stmt->execute()) {
                         return true;
                     }
