@@ -60,7 +60,7 @@ class Series
         $stmt->bindParam(":folder", $this->Folder);
 
         if (mkdir(__DIR__ . "/../series/" . $this->Folder)) {
-            $temp = explode(".", $_FILES["file"]["name"]);
+            $temp = explode(".", $_FILES["files"]["name"][0]);
             $newfilename = uniqid("img_") . '.' . end($temp);
             if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $newfilename)) {
                 if ($stmt->execute()) {
