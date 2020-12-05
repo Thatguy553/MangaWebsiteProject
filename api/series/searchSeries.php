@@ -26,8 +26,8 @@ if ($items->Title != null) {
         "Folder" => $items->Folder);
 
     http_response_code(200);
-    echo json_encode($emp_arr);
+    print_r($emp_arr);
 } else {
     http_response_code(404);
-    echo json_encode("Series not found.");
+    print_r("Series not found.");
 }

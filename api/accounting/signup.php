@@ -5,8 +5,8 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include_once __DIR__.'/../../config/database.php';
-include_once __DIR__.'/../../class/accounting.php';
+include_once __DIR__ . '/../../config/database.php';
+include_once __DIR__ . '/../../class/accounting.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -20,8 +20,7 @@ $acc->password = $data->password;
 $acc->role = $data->role;
 
 if ($acc->signup()) {
-    echo "Signup Successful!";
+    print_r("Signup Successful!");
 } else {
-    echo "Signup Failed...";
+    print_r("Signup Failed...");
 }
-?>

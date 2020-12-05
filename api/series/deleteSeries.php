@@ -16,7 +16,7 @@ $items = new Series($conn);
 $items->UID = $_POST['uid'];
 
 if ($items->delete()) {
-    echo json_encode("Series Deleted.");
+    print_r("Series Deleted.");
 } else {
-    echo json_encode("Series could not be Deleted.");
+    print_r("Series could not be Deleted.");
 }

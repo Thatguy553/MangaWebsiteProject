@@ -11,9 +11,11 @@ class Chapters
 
     // Columns
     public $UID;
+    public $Series;
     public $Title;
     public $ChNum;
     public $Rar;
+    public $Pages;
     public $Folder;
     public $ExistingFolder;
 
@@ -35,16 +37,19 @@ class Chapters
     public function insert()
     {
         $this->Folder = uniqid('chapter_');
-        $query = "INSERT INTO " . $this->table . " SET Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder";
+        $query = "INSERT INTO " . $this->table . " SET series = :series, Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder";
         $stmt = $this->conn->prepare($query);
 
         // Sanitize
         $this->Title = htmlspecialchars(strip_tags($this->Title));
+        $this->Series = htmlspecialchars(strip_tags($this->Series));
         $this->ChNum = htmlspecialchars(strip_tags($this->ChNum));
         $this->Pages = htmlspecialchars(strip_tags($this->Pages));
+        # $this->Rar = htmlspecialchars(strip_tags($this->Rar));
         $this->Folder = htmlspecialchars(strip_tags($this->Folder));
 
         // Bind
+        $stmt->bindParam(":series", $this->Series);
         $stmt->bindParam(":title", $this->Title);
         $stmt->bindParam(":chnum", $this->ChNum);
         $stmt->bindParam(":pages", $this->Pages);
@@ -52,17 +57,23 @@ class Chapters
 
         // Change to mkdir inside of the series that chapter is for, then move the .rar to the directory for the chapter, extract it, delete the rar, and insert into the database
         if (mkdir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder)) {
-            if (move_uploaded_file($this->Rar['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $this->Rar['name'][0])) {
+            if (move_uploaded_file($this->Rar['tmp_name'][0], __DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/" . $this->Rar['name'][0])) {
                 $zip = new ZipArchive;
                 $res = $zip->open(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/" . $this->Rar['name'][0]);
                 if ($res === true) {
                     if ($zip->extractTo(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/")) {
+                        $zip->close();
                         unlink(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/" . $this->Rar['name'][0]);
                         if ($stmt->execute()) {
-                            $zip->close();
                             return true;
+                        } else {
+                            print_r("Execute Failed.");
                         }
+                    } else {
+                        print_r("Extract To Failed.");
                     }
+                } else {
+                    print_r("Zip Open Failed.");
                 }
             } else {
                 rmdir(__DIR__ . "/../series/" . $this->Folder);
@@ -73,16 +84,17 @@ class Chapters
 
     public function update()
     {
-        $this->Image = $_FILES['files'];
-        $query = "UPDATE " . $this->table . " SET Title = :title WHERE UID = :uid";
+        $query = "UPDATE " . $this->table . " SET Title = :title, ChNum = :chnum WHERE UID = :uid";
         $stmt = $this->conn->prepare($query);
 
         // Sanitization
         $this->UID = htmlspecialchars(strip_tags($this->UID));
+        $this->ChNum = htmlspecialchars(strip_tags($this->ChNum));
         $this->Title = htmlspecialchars(strip_tags($this->Title));
 
         // Bind
         $stmt->bindParam(":uid", $this->UID);
+        $stmt->bindParam(":chnum", $this->ChNum);
         $stmt->bindParam(":title", $this->Title);
 
         if ($stmt->execute()) {
@@ -104,11 +116,23 @@ class Chapters
 
         // Bind
         $stmt->bindParam(1, $this->UID);
-        $FolderStmt->bindParam(1, $this->UID);
+        $FolderStmt->bindParam(1, $this->Series);
 
         if ($FolderStmt->execute()) {
             if ($rows = $FolderStmt->fetch(PDO::FETCH_ASSOC)) {
-                array_map('unlink', glob(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder . "/*.*"));
+                $files = glob(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder . "/*.*");
+
+                // Deleting all the files in the list
+                foreach ($files as $file) {
+
+                    if (is_file($file))
+
+                    // Delete the given file
+                    {
+                        unlink($file);
+                    }
+
+                }
                 if (file_exists(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder)) {
                     if (rmdir(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder)) {
                         if ($stmt->execute()) {
@@ -121,7 +145,7 @@ class Chapters
                     }
                 }
             } else {
-                return false;
+                print_r("rows found nothing");
             }
         }
 

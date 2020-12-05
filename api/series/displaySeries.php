@@ -32,6 +32,6 @@ if ($itemCount > 0) {
     }
     echo json_encode($seriesArr);
 } else {
-    http_response_code(404);
-    echo json_encode(array("message" => "No series found"));
+    http_response_code(204);
+    print_r(array("message" => "No series found"));
 }
