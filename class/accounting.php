@@ -21,39 +21,38 @@ class Accounting
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function login() {
-        
-            $query = "SELECT * FROM " . $this->table . " WHERE username = ?";
-            $stmt = $this->conn->prepare($query);
+    public function login()
+    {
 
-            // Sanitize
-            $this->username = htmlspecialchars(strip_tags($this->username));
+        $query = "SELECT * FROM " . $this->table . " WHERE username = ?";
+        $stmt = $this->conn->prepare($query);
 
-            // Bind
-            $stmt->bindParam(1, $this->username);
+        // Sanitize
+        $this->username = htmlspecialchars(strip_tags($this->username));
 
-            $stmt->execute();
+        // Bind
+        $stmt->bindParam(1, $this->username);
 
-            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (password_verify($this->password, $row['password'])) {
-                    #session_start();
-                    #$_SESSION['user'] = $row['username'];
-                    #$_SESSION['pass'] = $row['password'];
-                    #$_SESSION['role'] = $row['role'];
-                    $details = array(
-                        "user" => $row['username'],
-                        "role" => $row['role']
-                    );
+        $stmt->execute();
 
-                    return $details;
-                } else {
-                    return false;
-                }
+        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (password_verify($this->password, $row['password'])) {
+
+                $details = array(
+                    "user" => $row['username'],
+                    "role" => $row['role'],
+                );
+
+                return $details;
+            } else {
+                return false;
             }
-        
+        }
+
     }
 
-    public function signup() {
+    public function signup()
+    {
         $query = "INSERT INTO " . $this->table . " SET username = :user, password = :pass, role = :role";
         $stmt = $this->conn->prepare($query);
 
@@ -74,14 +73,5 @@ class Accounting
             return true;
         }
         return false;
-    }
-
-    // Unnecessary for now.
-    public function logout() {
-        session_start();
-        
-        session_unset();
-        
-        session_destroy();   
     }
 }

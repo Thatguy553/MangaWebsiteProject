@@ -5,7 +5,6 @@ if ($_SESSION) {
     exit;
 }
 ?>
-
 <main>
     <section id="login-form">
         <form action="#" method="post">
@@ -18,39 +17,7 @@ if ($_SESSION) {
         </form>
     </section>
 </main>
-
-<script>
-function checkPass(input) {
-    if (input.value != document.getElementById('password').value) {
-        input.setCustomValidity('Passwords should match.');
-    } else {
-        input.setCustomValidity('');
-    }
-}
-
-function signup() {
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-
-    console.log("User: " + username + "Pass: " + password)
-
-    let json = {
-        username: username,
-        password: password,
-        role: "reader"
-    }
-
-    console.log(json)
-
-    fetch(<?php __DIR__ ?> "/../api/accounting/signup.php", {
-            method: "POST",
-            body: JSON.stringify(json)
-        })
-        .then(function(res) {
-            console.log(res.text());
-        })
-}
-</script>
+<script type="text/javascript" src="http://localhost/views/JS/signup.js"></script>
 
 <?php
 include_once __DIR__ . '/footer.php';

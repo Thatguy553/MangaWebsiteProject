@@ -17,7 +17,7 @@ $data = json_decode(file_get_contents("php://input"));
 
 $acc->username = $data->username;
 $acc->password = $data->password;
-$acc->role = $data->role;
+$acc->role = "reader";
 
 if ($acc->signup()) {
     print_r("Signup Successful!");

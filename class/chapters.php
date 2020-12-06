@@ -37,7 +37,7 @@ class Chapters
     public function insert()
     {
         $this->Folder = uniqid('chapter_');
-        $query = "INSERT INTO " . $this->table . " SET series = :series, Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder";
+        $query = "INSERT INTO " . $this->table . " SET series = :series, Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder, seriesFolder = :sfolder";
         $stmt = $this->conn->prepare($query);
 
         // Sanitize
@@ -45,8 +45,8 @@ class Chapters
         $this->Series = htmlspecialchars(strip_tags($this->Series));
         $this->ChNum = htmlspecialchars(strip_tags($this->ChNum));
         $this->Pages = htmlspecialchars(strip_tags($this->Pages));
-        # $this->Rar = htmlspecialchars(strip_tags($this->Rar));
         $this->Folder = htmlspecialchars(strip_tags($this->Folder));
+        $this->ExistingFolder = htmlspecialchars(strip_tags($this->ExistingFolder));
 
         // Bind
         $stmt->bindParam(":series", $this->Series);
@@ -54,6 +54,7 @@ class Chapters
         $stmt->bindParam(":chnum", $this->ChNum);
         $stmt->bindParam(":pages", $this->Pages);
         $stmt->bindParam(":folder", $this->Folder);
+        $stmt->bindParam(":sfolder", $this->ExistingFolder);
 
         // Change to mkdir inside of the series that chapter is for, then move the .rar to the directory for the chapter, extract it, delete the rar, and insert into the database
         if (mkdir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder)) {
@@ -64,6 +65,7 @@ class Chapters
                     if ($zip->extractTo(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/")) {
                         $zip->close();
                         unlink(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/" . $this->Rar['name'][0]);
+                        $this->Pages = count(scandir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/")) - 2 ?? 0;
                         if ($stmt->execute()) {
                             return true;
                         } else {
@@ -152,4 +154,46 @@ class Chapters
         return false;
     }
 
+    public function searchList()
+    {
+        $query = "SELECT * FROM " . $this->table . " WHERE series = ?";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->UID);
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function searchSingle()
+    {
+        $query = "SELECT * FROM " . $this->table . " WHERE ChNum = :chnum AND series = :series";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":chnum", $this->ChNum);
+        $stmt->bindParam(":series", $this->Series);
+        $stmt->execute();
+        //return $stmt;
+
+        if ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->UID = $rows['UID'];
+            $this->ChNum = $rows['ChNum'];
+            $this->Series = $rows['series'];
+            $this->Title = $rows['Title'];
+            $this->Pages = $rows['Pages'];
+            $this->Folder = $rows['Folder'];
+            $this->ExistingFolder = $rows['seriesFolder'];
+        }
+    }
+
+    public function pageArr()
+    {
+        // Sanitization
+        $this->Folder = htmlspecialchars(strip_tags($this->Folder));
+        $this->ExistingFolder = htmlspecialchars(strip_tags($this->ExistingFolder));
+
+        $arr = scandir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/");
+
+        array_push($arr, $this->Folder, $this->ExistingFolder);
+        return $arr;
+    }
 }
