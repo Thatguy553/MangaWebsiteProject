@@ -1,9 +1,4 @@
 <?php
-$header = getallheaders();
-if (!$header['api-key']) {
-    print_r(["ERROR" => "ACCESS DENIED"]);
-    exit;
-}
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");

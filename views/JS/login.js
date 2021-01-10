@@ -1,4 +1,8 @@
-function login() {
+let login = document.getElementById("login-form");
+
+login.addEventListener('submit', (e) => {
+    e.preventDefault();
+
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
@@ -11,4 +15,6 @@ function login() {
         method: "POST",
         body: JSON.stringify(json)
     })
-}
+
+    window.location = "http://localhost/";
+})

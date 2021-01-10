@@ -34,7 +34,7 @@ function seriesList() {
 function seriesPage(series) {
 
     document.getElementById('series-page').innerHTML += "<section id='series-unique'></section>"
-    fetch("/../api/series/searchSeries.php?UID=" + series)
+    fetch("http://localhost/api/series/searchSeries.php?UID=" + series)
         .then(res => res.json())
         .then(data => {
             document.getElementById('series-unique').innerHTML +=
@@ -43,7 +43,7 @@ function seriesPage(series) {
                 "</h2><p>" + data.Description + "</p></div></section>";
         })
 
-    fetch("/../api/chapters/search.php?series=" + series)
+    fetch("http://localhost/api/chapters/search.php?series=" + series)
         .then(res => res.json())
         .then(data => {
             document.getElementById("series-unique").innerHTML += "<h2>Chapters</h2><section id='series-chapters'></section>";
