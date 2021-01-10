@@ -27,6 +27,10 @@ create.addEventListener('submit', (e) => {
 
     fetch(insertURL, {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         console.log(response)
@@ -43,6 +47,10 @@ function Delete(UID, Folder, Series) {
     formData.append('series', Series);
     fetch(deleteURL, {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         console.log(response);
@@ -134,6 +142,10 @@ update.addEventListener('submit', (async (e) => {
     // Array of variables sent to update series
     fetch("/../api/chapters/update.php", {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         setChapters();

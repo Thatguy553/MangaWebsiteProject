@@ -1,10 +1,209 @@
-#series-page {
+body {
+  margin: 0;
+  background-color: #333333;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #333333;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Public Navigation */
+header {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  color: #ababab;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+#pub-nav {
+  display: flex;
+  align-items: baseline;
+}
+
+#pub-nav ul {
+  display: flex;
+  padding-inline-start: 0;
+}
+
+#vers {
+  padding-right: 7px;
+}
+
+.nav-item {
+  padding: 7px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  color: #ababab;
+}
+
+.nav-item:hover {
+  color: rgb(206, 206, 206);
+}
+
+/* Series List Section */
+#series-page {
+  display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+.series-item {
+  padding: 10px;
+}
+
+.series-link {
+  display: flex;
+  flex-direction: column-reverse;
+  text-decoration: none;
+  color: #ababab;
+}
+
+.series-link:hover {
+  color: rgb(206, 206, 206);
 }
 
 .series-image {
-  width: 300px;
-  height: 400px;
+  max-width: 300px;
+  max-height: 400px;
+}
+
+/* Series Info Page */
+#series-unique {
+  display: flex;
+  flex-direction: column;
+  color: #ababab;
+}
+
+#series-info {
+  display: flex;
+  align-items: center;
+}
+
+#series-info p {
+  max-width: 65%;
+}
+
+.series-page-image {
+  max-width: 22%;
+  max-height: 25%;
+  padding: 2%;
+}
+
+#series-chapters {
+  display: flex;
+  flex-direction: column;
+}
+
+.chapter-item {
+  background-color: #313131;
+  margin: 10px;
+  width: 60rem;
+  border: 1px solid #292929;
+  border-radius: 5px;
+}
+
+.chapter-item a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  text-decoration: none;
+  color: #ababab;
+}
+
+.chapter-item a:hover {
+  color: rgb(206, 206, 206);
+}
+
+.chapter-item a div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.Number {
+  padding-left: 5px;
+  padding-right: 10px;
+}
+
+.Pages {
+  padding-right: 5px;
+}
+
+/* Reader Page CSS */
+#reader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+.image {
+  width: 70%;
+}
+
+#top-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+}
+
+#top-buttons a {
+  color: #ababab;
+  text-decoration: none;
+  padding: 6px;
+}
+
+#top-buttons a:hover {
+  color: rgb(206, 206, 206);
+}
+
+#bottom-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+}
+
+#bottom-buttons a {
+  color: #ababab;
+  text-decoration: none;
+  padding: 6px;
+}
+
+#bottom-buttons a:hover {
+  color: rgb(206, 206, 206);
+}
+
+/* About CSS Page */
+#about {
+  display: flex;
+  flex-direction: column;
+  color: #ababab;
+  padding: 10px;
 }

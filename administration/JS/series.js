@@ -1,9 +1,16 @@
 // Variables to be used in all of the below functions
-const insertURL = '/../api/series/insertSeries.php';
-const deleteURL = '/../api/series/deleteSeries.php';
-const updateURL = '/../api/series/updateSeries.php';
+const insertURL = 'http://localhost/api/series/insertSeries.php';
+const deleteURL = 'http://localhost/api/series/deleteSeries.php';
+const updateURL = 'http://localhost/api/series/updateSeries.php';
 const create = document.getElementById('create');
 const update = document.getElementById('update');
+// let headers = new Headers();
+// headers.append("api-key", key);
+// console.log(headers.get("api-key"));
+
+if (API == 0) {
+    window.phpLoadFile()
+}
 
 // Sends data from the create series inputs to an API endpoint to be created.
 create.addEventListener('submit', (e) => {
@@ -21,6 +28,10 @@ create.addEventListener('submit', (e) => {
 
     fetch(insertURL, {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         console.log(response)
@@ -35,6 +46,10 @@ function Delete(UID) {
     formData.append('uid', UID)
     fetch(deleteURL, {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         console.log(response)
@@ -55,7 +70,7 @@ function unsetSeries() {
 
 // Fetches all series from database in an assoc array
 function setSeries() {
-    fetch("/../api/series/displaySeries.php")
+    fetch("http://localhost/api/series/displaySeries.php")
         .then(res => res.json())
         .then(data => {
             // data available here
@@ -123,8 +138,12 @@ update.addEventListener('submit', (async (e) => {
     formData.append('EImage', curInfo['EImage']);
 
     // Array of variables sent to update series
-    fetch("/../api/series/updateSeries.php", {
+    fetch("http://localhost/api/series/updateSeries.php", {
         method: 'POST',
+        headers: {
+            'UID': UID, 
+            'api-key': key,
+          },
         body: formData,
     }).then((response) => {
         console.log(response);
@@ -134,7 +153,7 @@ update.addEventListener('submit', (async (e) => {
 
 // Searches for specific series so that I can get the data that needs to be replaced with new data
 async function getSeries(UID) {
-    let series = await fetch("/../api/series/searchSeries.php?UID=" + UID);
+    let series = await fetch("http://localhost/api/series/searchSeries.php?UID=" + UID);
     let data = await series.json();
     let seriesInfo = [];
     seriesInfo['folder'] = data.Folder

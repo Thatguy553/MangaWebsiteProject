@@ -1,45 +1,7 @@
-<h1>API Usage.</h1>
+<h1>Setup</h1>
 
-<p><h3>Delete Series:</h3> Send JSON with UID to /api/deleteSeries.php. (Not for public use)</p>
+<p>Pretty simple, once you receive the Database from me what you need to do is put the files in the root of your htdocs folder of your web server, then go into the .env file and change the information to your own. I will provide this .env later because it totally exists and i didnt just think of it. What <i>should</i> happen when you visit your website is it will be working properly, you should be able to create series, chapters, accounts, etc.</p>
 
-<p>{
-    "UID": "1"
-}</p>
+<h1>What if there is errors?</h1>
 
-<p><h3>Display Series:</h3> Displays JSON in an array to list every series in the database, example JSON below.</p>
-
-<p>{"body":
-[{
-"UID":"",
-"Title":"",
-"Description":"",
-"Chapters":"0"
-}]</p>
-
-<p><h3>UID:</h3> The unique series Identifier.</p>
-<p><h3>Title:</h3> The name of the series.</p>
-<p><h3>Description:</h3> The description of the series.</p>
-<p><h3>Chapters:</h3> The amount of chapters that series contains.</p>
-
-<p><h3>Insert Series:</h3> Send JSON containing Title, Description, and Chapters to /api/insertSeries.php. (Not for public use)</p>
-<p>{
-"Title": "",
-"Description": "",
-"Chapters": ""
-}</p>
-
-<p><h3>Search for series:</h3> Fetch JSON from a url containing URL Vars with the series UID.</p>
-<p><h3>Example Usage:</h3> Fetch URL /api/searchSeries.php?UID=1</p>
-<p>This will either list the series that has that UID or it will say "No Series Found".</p>
-
-<p><h3>Update Series:</h3> Send JSON containing the values you wish to update to /api/updateSeries.php</p>
-<p>{
-"Title": "",
-"Description": "",
-"Chapters": ""
-}</p>
-
-<p><h3>Delete Series:</h3> Send JSON containing the series UID you wish to delete to /api/deleteSeries.php.</p>
-<p>{
-"UID": "1"
-}</p>
+<p>Well I fucking hate servers, always different in some way from what I made the website work on. If you have my contact info, you got this from me and just contact me, duh. Otherwise open an issue and ill get back to you once I have the solution or an idea.</p>

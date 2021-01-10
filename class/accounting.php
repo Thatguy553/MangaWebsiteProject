@@ -39,8 +39,11 @@ class Accounting
             if (password_verify($this->password, $row['password'])) {
 
                 $details = array(
+                    "UID" => $row['UID'],
                     "user" => $row['username'],
                     "role" => $row['role'],
+                    "API" => $row['APIAccess'],
+                    "Key" => $row['API-Key'],
                 );
 
                 return $details;

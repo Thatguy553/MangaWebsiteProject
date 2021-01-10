@@ -41,6 +41,12 @@ include_once __DIR__ . '/../views/header.php';
             <input type="submit" name="submit">
         </form>
     </section>
+
+    <script>
+    let API = <?php echo $_SESSION['API']; ?>;
+    let UID = <?php echo $_SESSION['UID']; ?>;
+    let key = "<?php echo $_SESSION['Key']; ?>";
+    </script>
     <script src="https://localhost/administration/JS/chapters.js"></script>
 
 </main>
