@@ -13,6 +13,9 @@ class Accounting
     public $username;
     public $password;
     public $role;
+    public $created;
+    public $APIAccess;
+    public $APIKey;
 
     // Connecting...
     public function __construct($db)
@@ -76,5 +79,35 @@ class Accounting
             return true;
         }
         return false;
+    }
+
+    public function search()
+    {
+        $query = "SELECT UID, username, role, created, APIAccess, APIKey FROM " . $this->table . " WHERE username = :user OR UID = :user";
+        $stmt = $this->conn->prepare($query);
+
+        // Sanitize
+        $this->UID = htmlspecialchars(strip_tags($this->UID));
+
+        // Bind
+        $stmt->bindParam(":user", $this->UID);
+        $stmt->execute();
+
+        if ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $this->UID = $rows['UID'];
+            $this->username = $rows['username'];
+            $this->role = $rows['role'];
+            $this->created = $rows['created'];
+            $this->APIAccess = $rows['APIAccess'];
+            $this->APIKey = $rows['APIKey'];
+        }
+    }
+
+    public function display()
+    {
+        $query = "SELECT * FROM " . $this->table;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
     }
 }

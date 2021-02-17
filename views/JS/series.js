@@ -13,22 +13,52 @@ if (!queryString) {
 }
 
 function seriesList() {
-    fetch("/../api/series/displaySeries.php")
-        .then(res => res.json())
-        .then(data => {
-            // data available here
-            for (let i = 0; i < data.body.length; i++) {
-                let series = data.body[i].UID
-                // series = series.slice(7, series.length)
-                document.getElementById("series-page").innerHTML +=
-                    "<div class='series-item'><a class='series-link' href='/pubSeries?Series=" + series + "'><p class='series-title'>" +
-                    data.body[i].Title +
-                    "</p><img class='series-image' src='/../series/" +
-                    data
-                    .body[i].Folder + "/" +
-                    data.body[i].Image + "'></a></div>";
-            }
-        });
+    let seriesList = new Vue({
+        el: '#series-page',
+        data: {
+            list: !series,
+            Titles: [],
+            Images: [],
+            Folders: [],
+            Series: [],
+            SeriesInfo: []
+        },
+        mounted() {
+            fetch("/../api/series/displaySeries.php")
+                .then(res => res.json())
+                .then(data => {
+                    for (let i = 0; i < data.body.length; i++) {
+                        let UID = { uid: data.body[i].UID };
+                        let Title = { name: data.body[i].Title };
+                        let SeriesImage = { cover: data.body[i].Image };
+                        let Folder = { folder: data.body[i].Folder };
+                        // this.Series.push(UID);
+                        // this.Titles.push(Title);
+                        // this.Images.push(SeriesImage);
+                        // this.Folders.push(Folder);
+                        this.SeriesInfo.push(UID, Title, SeriesImage, Folder);
+                    }
+                })
+        }
+    })
+
+
+    // fetch("/../api/series/displaySeries.php")
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         // data available here
+    //         for (let i = 0; i < data.body.length; i++) {
+    //             let series = data.body[i].UID
+    //             // series = series.slice(7, series.length)
+    //             document.getElementById("series-page").innerHTML +=
+    //                 "<div class='series-item'><a class='series-link' href='/pubSeries?Series=" + series + "'><p class='series-title'>" +
+    //                 data.body[i].Title +
+    //                 "</p><img class='series-image' src='/../series/" +
+    //                 data
+    //                     .body[i].Folder + "/" +
+    //                 data.body[i].Image + "'></a></div>";
+    //         }
+    //     });
 }
 
 function seriesPage(series) {
@@ -52,8 +82,8 @@ function seriesPage(series) {
                     "<div class='chapter-item'><a href='/pubSeries?Series=" +
                     series +
                     "&chapter=" + data.body[i].ChNum + "'><div><p class='Number'>Chapter " + data.body[i]
-                    .ChNum + ":</p><p class='Title'>" + data
-                    .body[i].Title +
+                        .ChNum + ":</p><p class='Title'>" + data
+                            .body[i].Title +
                     "</p></div><p class='Pages'>Length: " + data.body[i].Pages + " pages</p></a></div>";
             }
         })
@@ -92,19 +122,19 @@ async function pageArr(cFolder, sFolder) {
                     }
                     document.getElementById("reader").innerHTML += "<div id='bottom-buttons'></div>";
                     if (arrLength > 1 && chapters > 1) {
-                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"&chapter="+(chapters - 1)+"'>Back</a>";
-                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"&chapter="+(chapters - 1)+"'>Back</a>";
+                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "&chapter=" + (chapters - 1) + "'>Back</a>";
+                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "&chapter=" + (chapters - 1) + "'>Back</a>";
                     } else {
-                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"'>Back</a>";
-                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"'>Back</a>";
+                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "'>Back</a>";
+                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "'>Back</a>";
                     }
                     if (arrLength > 1 && chapters < chnum) {
-                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"&chapter="+ (chapters + 1) +"'>Next</a>";
-                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"&chapter="+ (chapters + 1) +"'>Next</a>";
+                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "&chapter=" + (chapters + 1) + "'>Next</a>";
+                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "&chapter=" + (chapters + 1) + "'>Next</a>";
                     } else {
-                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"'>Next</a>";
-                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series="+series+"'>Next</a>";
+                        document.getElementById("top-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "'>Next</a>";
+                        document.getElementById("bottom-buttons").innerHTML += "<a href='/pubSeries?Series=" + series + "'>Next</a>";
                     }
-            })
+                })
         })
 }
