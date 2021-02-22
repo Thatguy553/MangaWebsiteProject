@@ -133,7 +133,6 @@ class Chapters
                     {
                         unlink($file);
                     }
-
                 }
                 if (file_exists(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder)) {
                     if (rmdir(__DIR__ . "/../series/" . $rows['Folder'] . "/" . $this->Folder)) {
@@ -193,7 +192,7 @@ class Chapters
 
         $arr = scandir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder . "/");
 
-        array_push($arr, $this->Folder, $this->ExistingFolder);
+        // array_push($arr, $this->Folder, $this->ExistingFolder);
         return $arr;
     }
 }

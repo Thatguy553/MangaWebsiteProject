@@ -74,6 +74,14 @@ header h1 {
   max-width: 100%;
 }
 
+.series-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+
 .series-item {
   padding: 10px;
 }
