@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: #333333;
+  background-color: #242323;
   color: #ababab;
 }
 
@@ -40,9 +40,14 @@ header h1 {
   padding-right: 7px;
 }
 
+nav select {
+  display: none;
+}
+
 #pub-nav {
   display: flex;
   align-items: baseline;
+  width: 90%;
 }
 
 #pub-nav ul {
@@ -63,6 +68,99 @@ header h1 {
 
 .nav-item:hover {
   color: rgb(206, 206, 206);
+}
+
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+
+.dropdown .dropbtn {
+  font-size: 17px;    
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit;
+  margin: 0;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+.pub-nav .icon {
+  display: none;
+}
+
+.fa-bars {
+  color: #555;
+  font-size: 20px;
+}
+
+/* Responsive CSS Query Header */
+@media screen and (max-width: 600px) {
+  .pub-nav a:not(:first-child), .dropdown .dropbtn {
+    display: none;
+  }
+  .pub-nav a.icon {
+    float: right;
+    display: block;
+    position: absolute;
+    right: 7px;
+    top: 7px;
+  }
+
+  #pub-nav {
+    display: block;
+    align-items: baseline;
+    width: 100%;
+  }
+  
+  #pub-nav ul {
+    display: block;
+    padding-inline-start: 0;
+  }
+
+  #vers {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .pub-nav.responsive {position: relative;}
+  .pub-nav.responsive .icon {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+  }
+  .pub-nav.responsive a {
+    float: none;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+  }
+  .pub-nav.responsive .dropdown {float: none;}
+  .pub-nav.responsive .dropdown-content {position: relative;}
+  .pub-nav.responsive .dropdown .dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
 }
 
 /* Series List Section */
@@ -164,49 +262,142 @@ header h1 {
   padding-right: 5px;
 }
 
+/* Responsive Query CSS Series Page */
+@media screen and (max-width: 600px) {
+  #series-unique {
+    display: flex;
+    color: #ababab;
+  }
+  
+  #series-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #series-info p {
+    display: flex;
+    text-align: center;
+    max-width: 90%;
+  }
+
+  #series-info h2 {
+    text-align: center;
+  }
+  
+  .series-page-image {
+    max-width: 90%;
+    max-height: 90%;
+    padding: 0%;
+  }
+  
+  #series-chapters {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chapter-item {
+    background-color: #313131;
+    margin: 0px;
+    width: 100%;
+    border: 1px solid #292929;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+  }
+  
+  .chapter-item a div{
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .Number {
+    width: 19%;
+  }
+
+  .Title {
+    width: 35%;
+  }
+  
+  .Pages {
+    width: 35%;
+    text-align: right;
+  }
+}
+
+
 /* Reader Page CSS */
 #reader {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 100%;
+}
+
+#image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .image {
-  width: 70%;
+  width: 50%;
+  margin: 1rem;
 }
 
 #top-buttons {
   display: flex;
+  width: 50%;
+  flex-direction: row;
   justify-content: space-between;
-  width: 70%;
-}
-
-#top-buttons a {
-  color: #ababab;
-  text-decoration: none;
-  padding: 6px;
-}
-
-#top-buttons a:hover {
-  color: rgb(206, 206, 206);
+  align-items: baseline;
 }
 
 #bottom-buttons {
   display: flex;
+  width: 50%;
+  flex-direction: row;
   justify-content: space-between;
-  width: 70%;
+  align-items: baseline;
 }
 
-#bottom-buttons a {
-  color: #ababab;
-  text-decoration: none;
-  padding: 6px;
+.next-btn {
+  padding: 7px;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
-#bottom-buttons a:hover {
-  color: rgb(206, 206, 206);
+.last-btn {
+  padding: 7px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+  .image {
+    width: 90%;
+  }
+
+  .next-btn {
+    padding: 4px;
+  }
+
+  .last-btn {
+    padding: 4px;
+  }
+
+  #top-buttons {
+    width: 90%;
+  }
+  #bottom-buttons {
+    width: 90%;
+  }
 }
 
 /* About CSS Page */
@@ -215,4 +406,97 @@ header h1 {
   flex-direction: column;
   color: #ababab;
   padding: 10px;
+}
+
+/* Login CSS Page */
+#login-page {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-form {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #555;
+  padding: 4rem;
+  border-radius: 7px;
+}
+
+.login-input {
+  padding: 10px;
+  margin: 5px;
+  width: 70%;
+  border-radius: 5px;
+  border: rgb(59, 59, 59) 1px solid;
+  background-color: #555;
+  outline: none;
+}
+
+.login-input:focus {
+  border: rgb(59, 59, 59) 2px solid;
+}
+
+.login-input::placeholder {
+  color: #242323;
+}
+
+#login-submit {
+  padding: 10px;
+  border-radius: 5px;
+  border: rgb(59, 59, 59) 1px solid;
+  outline: thin;
+  margin: 5px;
+}
+
+/* Signup Page CSS */
+
+#signup-page {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#signup-form {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #555;
+  padding: 4rem;
+  border-radius: 7px;
+}
+
+.signup-input {
+  padding: 10px;
+  margin: 5px;
+  width: 70%;
+  border-radius: 5px;
+  border: rgb(59, 59, 59) 1px solid;
+  background-color: #555;
+  outline: none;
+}
+
+.signup-input:focus {
+  border: rgb(59, 59, 59) 2px solid;
+}
+
+.signup-input::placeholder {
+  color: #242323;
+}
+
+#signup-submit {
+  padding: 10px;
+  border-radius: 5px;
+  border: rgb(59, 59, 59) 1px solid;
+  outline: thin;
+  margin: 5px;
 }

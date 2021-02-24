@@ -46,7 +46,7 @@ class Accounting
                     "user" => $row['username'],
                     "role" => $row['role'],
                     "API" => $row['APIAccess'],
-                    "Key" => $row['API-Key'],
+                    "Key" => $row['APIKey']
                 );
 
                 return $details;
@@ -54,7 +54,6 @@ class Accounting
                 return false;
             }
         }
-
     }
 
     public function signup()

@@ -45,7 +45,7 @@ include_once __DIR__ . '/../views/header.php';
     let UID = <?php echo $_SESSION['UID']; ?>;
     let key = "<?php echo $_SESSION['Key']; ?>";
     </script>
-    <script src="https://localhost/administration/JS/series.js"></script>
+    <script src="http://localhost/administration/JS/series.js"></script>
 
 </main>
 

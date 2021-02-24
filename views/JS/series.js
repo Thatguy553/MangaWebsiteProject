@@ -50,6 +50,16 @@ function seriesList() {
             }
         },
 
+        filters: {
+            ellipsis: function (value) {
+                if (!value) return '';
+                value = value.toString();
+                if (value.length <= 10) return value;
+
+                return value.slice(0, 10) + "...";
+            }
+        },
+
         mounted() {
             // Series List
             fetch("/../api/series/displaySeries.php")
@@ -78,7 +88,7 @@ function seriesList() {
                         for (let i = 0; i < data.body.length; i++) {
                             this.ChapInfo.push([{ chnum: data.body[i].ChNum }, { title: data.body[i].Title }, { pages: data.body[i].Pages }]);
                         }
-                        // console.log(this.ChapInfo);
+                        console.log(this.ChapInfo);
                     })
             };
 
@@ -111,6 +121,7 @@ function seriesList() {
                     .then(data => {
                         this.Chapters = { chaps: data.Chapters };
                     })
+
             }
         }
     })

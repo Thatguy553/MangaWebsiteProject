@@ -2,7 +2,7 @@
 include_once 'header.php';
 ?>
 
-<main id="series-page">
+<section id="series-page">
 
     <section v-if="SeriesList" id="list">
         <div class="series-list">
@@ -26,8 +26,9 @@ include_once 'header.php';
             <div v-if="ChapInfo" v-for="info in ChapInfo" class="chapter-item">
                 <a :href="`/pubSeries?Series=${uid.uid}&chnum=${info[0].chnum}`">
                     <div>
-                        <p class="Number">Chapter: {{ info[0].chnum }}</p>
-                        <p class="Title">{{ info[0].title }}</p>
+                        <span class="Number">Chapter {{ info[0].chnum }}:</span>
+                        <span class="Title" v-bind:title="info[1].title">{{ info[1].title | ellipsis }}</span>
+                        <span class="Pages">Pages: {{ info[2].pages }}</span>
                     </div>
                 </a>
             </div>
@@ -47,8 +48,8 @@ include_once 'header.php';
         </div>
 
         <div id="image-container">
-            <img v-for="page in ChapPages" :src="`../series/${Seriesfolder.sfolder}/${ChapFolder.folder}/${page.img}`"
-                :alt="page.img">
+            <img class="image" v-for="page in ChapPages"
+                :src="`../series/${Seriesfolder.sfolder}/${ChapFolder.folder}/${page.img}`" :alt="page.img">
         </div>
 
         <!-- Work on buttons later -->
@@ -59,7 +60,7 @@ include_once 'header.php';
 
     </section>
 
-</main>
+</section>
 
 <?php
 include_once 'footer.php';

@@ -1,18 +1,17 @@
 <?php
 include_once __DIR__ . '/header.php';
 ?>
-<main>
-    <section id="login-form">
-        <form action="#" method="post">
-            <input type="text" id="username" name="username" placeholder="Username..." required>
-            <input type="password" id="password" name="password" placeholder="Password..." oninput="checkPass(this)"
-                required>
-            <input type="password" id="password" name="password" placeholder="Re-Input Password..."
-                oninput="checkPass(this)" required>
-            <input type="submit" name="submit" onclick="signup()">
-        </form>
-    </section>
-</main>
+<section id="signup-page">
+    <h2>Signup</h2>
+    <form id="signup-form" action="#" method="post">
+        <input type="text" class="signup-input" name="username" placeholder="Username..." required>
+        <input type="password" class="signup-input" name="password" placeholder="Password..." oninput="checkPass(this)"
+            required>
+        <input type="password" class="signup-input" name="password" placeholder="Re-Input Password..."
+            oninput="checkPass(this)" required>
+        <input type="submit" id="signup-submit" name="submit" onclick="signup()">
+    </form>
+</section>
 <script type="text/javascript" src="http://localhost/views/JS/signup.js"></script>
 
 <?php

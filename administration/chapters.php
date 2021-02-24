@@ -46,8 +46,9 @@ include_once __DIR__ . '/../views/header.php';
     let API = <?php echo $_SESSION['API']; ?>;
     let UID = <?php echo $_SESSION['UID']; ?>;
     let key = "<?php echo $_SESSION['Key']; ?>";
+    console.log(key);
     </script>
-    <script src="https://localhost/administration/JS/chapters.js"></script>
+    <script src="http://localhost/administration/JS/chapters.js"></script>
 
 </main>
 
