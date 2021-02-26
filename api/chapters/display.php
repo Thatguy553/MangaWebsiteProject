@@ -1,7 +1,4 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
 include_once __DIR__ . '/../../config/database.php';
 include_once __DIR__ . '/../../class/chapters.php';
 
@@ -26,12 +23,13 @@ if ($itemCount > 0) {
             "Series" => $series,
             "Title" => $Title,
             "Pages" => $Pages,
-            "Folder" => $Folder);
+            "Folder" => $Folder
+        );
 
         array_push($seriesArr["body"], $e);
     }
     echo json_encode($seriesArr);
 } else {
     http_response_code(204);
-    print_r(array("message" => "No series found"));
+    echo json_encode(["chapter" => "not_found"]);
 }

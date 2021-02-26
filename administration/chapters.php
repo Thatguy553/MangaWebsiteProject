@@ -1,5 +1,14 @@
 <?php
 include_once __DIR__ . '/../views/header.php';
+if (!$_SESSION) {
+    header("Location: /");
+    exit;
+}
+
+if ($_SESSION['role'] != "Admin") {
+    header("Location: /");
+    exit;
+}
 ?>
 
 <main>

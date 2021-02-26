@@ -19,12 +19,6 @@ if (!$header['api-key']) {
 
 // print_r($response);
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
 include_once __DIR__ . '/../../config/database.php';
 include_once __DIR__ . '/../../class/chapters.php';
 
@@ -48,28 +42,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_tmp = $_FILES['files']['tmp_name'][0];
         $file_type = $_FILES['files']['type'][0];
         $file_size = $_FILES['files']['size'][0];
-        $file_ext = strtolower(end(explode('.', $file_name)));
+        $file_ext_start = explode('.', $file_name);
+        $file_ext = strtolower(end($file_ext_start));
 
         if (!in_array($file_ext, $extensions)) {
-            $errors[] = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
+            $errors["ext"] += 'Extension not allowed: ' . $file_name . ' ' . $file_type;
         }
 
         if ($file_size > 100000000) {
-            $errors[] = 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
+            $errors["file_size"] += 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
         }
 
         // Moves file to folder
         if (empty($errors)) {
             $items->Image = $_FILES['files'];
             if ($items->insert()) {
-                print_r("Series Successfully Created");
+                echo json_encode(["chapter" => "created"]);
             } else {
-                print_r("Series Could not be Created");
+                echo json_encode(["chapter" => "error"]);
             }
         }
 
         if ($errors) {
-            print_r($errors);
+            echo json_encode($errors);
         }
     }
 }

@@ -1,7 +1,4 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
 include_once __DIR__ . '/../../config/database.php';
 include_once __DIR__ . '/../../class/accounting.php';
 
@@ -26,7 +23,8 @@ if ($itemCount > 0) {
             "Created" => $row['created'],
             "Role" => $row['role'],
             "API" => $row['APIAccess'],
-            "Key" => $row['APIKey']);
+            "Key" => $row['APIKey']
+        );
 
         array_push($userArr["body"], $e);
     }

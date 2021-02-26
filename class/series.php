@@ -54,16 +54,16 @@ class Series
         $this->Image['name'][0] = htmlspecialchars(strip_tags($this->Image['name'][0]));
         $this->Folder = htmlspecialchars(strip_tags($this->Folder));
 
+        $temp = explode(".", $_FILES["files"]["name"][0]);
+        $newfilename = uniqid("img_") . '.' . end($temp);
         // Bind
         $stmt->bindParam(":title", $this->Title);
         $stmt->bindParam(":desc", $this->Description);
         $stmt->bindParam(":chapters", $this->Chapters);
-        $stmt->bindParam(":image", $this->Image['name'][0]);
+        $stmt->bindParam(":image", $newfilename);
         $stmt->bindParam(":folder", $this->Folder);
 
         if (mkdir(__DIR__ . "/../series/" . $this->Folder)) {
-            $temp = explode(".", $_FILES["files"]["name"][0]);
-            $newfilename = uniqid("img_") . '.' . end($temp);
             if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $newfilename)) {
                 if ($stmt->execute()) {
                     return true;
@@ -104,29 +104,31 @@ class Series
         $this->Image = $_FILES['files'];
 
         // DB Query and prepare
-        $query = "UPDATE " . $this->table . " SET Title = :title, Description = :desc, Chapters = :chapters, Image = :image WHERE UID = :uid";
+        $query = "UPDATE " . $this->table . " SET Description = :desc, Chapters = :chapters, Image = :image WHERE UID = :uid";
         $stmt = $this->conn->prepare($query);
 
         // Image Replace, slight chance of deleting the image and if the function fails to execute, doesnt replace it.
-        unlink(__DIR__ . "/../series/" . $this->Folder . "/" . $this->ExistingImage);
+        if (!unlink(__DIR__ . "/../series/" . $this->Folder . "/" . $this->ExistingImage)) {
+            return false;
+        }
 
         // Sanitization
         $this->UID = htmlspecialchars(strip_tags($this->UID));
-        $this->Title = htmlspecialchars(strip_tags($this->Title));
         $this->Description = htmlspecialchars(strip_tags($this->Description));
         $this->Chapters = htmlspecialchars(strip_tags($this->Chapters));
         $this->Image['name'][0] = htmlspecialchars(strip_tags($this->Image['name'][0]));
 
+        $temp = explode(".", $_FILES["files"]["name"][0]);
+        $newfilename = uniqid("img_") . '.' . end($temp);
         // Bind
         $stmt->bindParam(":uid", $this->UID);
-        $stmt->bindParam(":title", $this->Title);
         $stmt->bindParam(":desc", $this->Description);
         $stmt->bindParam(":chapters", $this->Chapters);
-        $stmt->bindParam(":image", $this->Image['name'][0]);
+        $stmt->bindParam(":image", $newfilename);
 
         // Statement Execution and new image replacement
         if ($stmt->execute()) {
-            if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $this->Image['name'][0])) {
+            if (move_uploaded_file($this->Image['tmp_name'][0], __DIR__ . "/../series/" . $this->Folder . "/" . $newfilename)) {
                 return true;
             }
         }

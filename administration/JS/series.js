@@ -2,164 +2,152 @@
 const insertURL = 'http://localhost/api/series/insertSeries.php';
 const deleteURL = 'http://localhost/api/series/deleteSeries.php';
 const updateURL = 'http://localhost/api/series/updateSeries.php';
-const create = document.getElementById('create');
-const update = document.getElementById('update');
-// let headers = new Headers();
-// headers.append("api-key", key);
-// console.log(headers.get("api-key"));
 
 if (API == 0) {
     window.phpLoadFile()
 }
 
-// Sends data from the create series inputs to an API endpoint to be created.
-create.addEventListener('submit', (e) => {
-    e.preventDefault();
-    unsetSeries();
+let SeriesPage = new Vue({
+    el: "#series-admin",
+    data() {
+        return {
+            SeriesInfo: [],
+            CreateInfo: [],
+            uid: [],
+            headers: [],
+            UpdateInfo: [],
+            DisplayCreate: false,
+            DisplayUpdate: false,
+        }
+    },
 
-    const title = document.getElementById("Ctitle").value;
-    const description = document.getElementById("Cdescription").value;
-    const files = document.getElementById('Cimage').files;
-    const formData = new FormData();
+    methods: {
+        create: function (event) {
+            let title = document.getElementById("create-title").value;
+            let description = document.getElementById("create-description").value;
+            let files = document.getElementById('create-image').files;
+            let formData = new FormData();
 
-    formData.append('files[]', files[0]);
-    formData.append('title', title);
-    formData.append('description', description);
+            formData.append('files[]', files[0]);
+            formData.append('title', title);
+            formData.append('description', description);
 
-    fetch(insertURL, {
-        method: 'POST',
-        headers: {
-            'UID': UID, 
-            'api-key': key,
-          },
-        body: formData,
-    }).then((response) => {
-        console.log(response)
-        setSeries();
-    })
-})
+            fetch(insertURL, {
+                method: 'POST',
+                headers: {
+                    'UID': UID,
+                    'api-key': key,
+                },
+                body: formData,
+            })
+                .then(res => res.json())
+                .then((response) => {
+                    console.log(response);
+                    if (response.series == "created") {
+                        document.getElementById("table-error").innerHTML = "Series Created. <br/> If you wish to delete the newly created series, refresh the page.";
+                        document.getElementById("table-error").style.color = "green";
+                        this.SeriesInfo.push([{ uid: null }, { title: title }, { desc: description }, { chapters: 0 }]);
+                    } else {
+                        document.getElementById("table-error").style.color = "red";
+                        document.getElementById("table-error").innerHTML = "Series Could Not Be Created.";
+                    }
+                });
+        },
 
-// Called by Button to delete a series
-function Delete(UID) {
-    unsetSeries();
-    const formData = new FormData()
-    formData.append('uid', UID)
-    fetch(deleteURL, {
-        method: 'POST',
-        headers: {
-            'UID': UID, 
-            'api-key': key,
-          },
-        body: formData,
-    }).then((response) => {
-        console.log(response)
-        setSeries();
-    })
-}
+        remove: function (uid) {
+            console.log(uid);
 
-// Unsets the currently assigned rows
-function unsetSeries() {
-    let table = document.getElementById("series");
-    let rows = table.rows.length;
-    console.log(rows);
-    for (let i = 1; i < rows; i++) {
-        console.log("Unset: " + i);
-        table.deleteRow(1);
-    }
-}
+            const formData = new FormData();
+            formData.append('uid', uid)
+            fetch(deleteURL, {
+                method: 'POST',
+                headers: {
+                    'UID': UID,
+                    'api-key': key,
+                },
+                body: formData,
+            })
+                .then(res => res.json())
+                .then((response) => {
+                    console.log(this.SeriesInfo.indexOf(uid));
+                    if (response.series == "deleted") {
+                        document.getElementById("table-error").innerHTML = "Series Was Deleted";
+                        document.getElementById("table-error").style.color = "lightgreen";
+                        this.SeriesInfo.splice(this.SeriesInfo.indexOf(uid), 1);
+                    } else {
+                        document.getElementById("table-error").style.color = "red";
+                        document.getElementById("table-error").innerHTML = "Series Could Not Be Deleted";
+                    }
+                })
+        },
 
-// Fetches all series from database in an assoc array
-function setSeries() {
-    fetch("http://localhost/api/series/displaySeries.php")
-        .then(res => res.json())
-        .then(data => {
-            // data available here
-            if (data.body) {
-                for (let i = 0; i < data.body.length; i++) {
-                    // Find a <table> element with id="myTable":
-                    let table = document.getElementById("series");
-                    // Create an empty <tr> element and add it to the 1st position of the table:
-                    let row = table.insertRow(1);
-                    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-                    let cell1 = row.insertCell(0);
-                    let cell2 = row.insertCell(1);
-                    let cell3 = row.insertCell(2);
-                    let cell4 = row.insertCell(3);
-                    let cell5 = row.insertCell(4);
-                    // Add some text to the new cells:
-                    cell1.innerHTML = data.body[i].UID;
-                    cell2.innerHTML = data.body[i].Title;
-                    cell3.innerHTML = data.body[i].Description;
-                    cell4.innerHTML = data.body[i].Chapters;
-                    cell5.innerHTML = "<button onclick='Delete(" + data.body[i].UID + ")'>Delete</button>";
-                    // Adds series to Update Dropdown
-                    document.getElementById("Utitle").innerHTML += "<option id='series-" + data.body[i].UID +
-                        "' name='" + data.body[i].Title +
-                        "' value='" + data.body[i].UID + "'>" +
-                        data
-                        .body[i].Title + "</option>"
+        update: function (event) {
+            // Form Data Variables
+            let UID = document.getElementById("update-title").value;
+            const title = document.getElementById("series-" + UID).getAttribute('name');
+            const description = document.getElementById("update-description").value;
+            const Images = document.getElementById('update-image').files;
+            const formData = new FormData();
+            let index;
+            for (let i = 0; i < this.SeriesInfo.length; i++) {
+                const element = this.SeriesInfo[i][0];
+                if (element.uid == UID.toString()) {
+                    index = i;
                 }
-            } else {
-                let table = document.getElementById("series");
-                let row = table.insertRow(1);
-                let cell1 = row.insertCell(0);
-                let cell2 = row.insertCell(1);
-                let cell3 = row.insertCell(2);
-                let cell4 = row.insertCell(3);
-                cell1.innerHTML = "No";
-                cell2.innerHTML = "Series";
-                cell3.innerHTML = "Data";
-                cell4.innerHTML = "Found";
-
-                // Adds series to Update Dropdown
-                document.getElementById("Utitle").innerHTML += "<option>No Series</option>"
             }
-        });
-}
+            let ExistingInfo = this.SeriesInfo[index];
+            console.log(ExistingInfo[4]);
+            // Variables added to array to be sent back
+            formData.append('files[]', Images[0]);
+            formData.append('uid', UID);
+            formData.append('description', description);
+            formData.append('folder', ExistingInfo[4].folder);
+            formData.append('EImage', ExistingInfo[5].image);
 
-// Updates Series information.
-update.addEventListener('submit', (async (e) => {
-    e.preventDefault();
-    unsetSeries();
-    // Form Data Variables
-    let UID = document.getElementById("Utitle").value;
-    const title = document.getElementById("series-" + UID).getAttribute('name');
-    const description = document.getElementById("Udescription").value;
-    const Images = document.getElementById('Uimage').files;
-    const formData = new FormData();
-    let curInfo = await getSeries(UID);
+            // Array of variables sent to update series
+            fetch("http://localhost/api/series/updateSeries.php", {
+                method: 'POST',
+                headers: {
+                    'UID': UID,
+                    'api-key': key,
+                },
+                body: formData,
+            })
+                .then(res => res.json())
+                .then((response) => {
+                    console.log(response);
+                    if (response.series == "updated") {
+                        document.getElementById("table-error").style.color = "green";
+                        document.getElementById("table-error").innerHTML = "Series Was Updated. Refresh to see new info.";
+                    } else {
+                        document.getElementById("table-error").style.color = "red";
+                        document.getElementById("table-error").innerHTML = "Series Could Not Be Updated";
+                    }
+                })
+        },
+    },
 
-    // Variables added to array to be sent back
-    formData.append('files[]', Images[0]);
-    formData.append('uid', UID);
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('folder', curInfo['folder']);
-    formData.append('EImage', curInfo['EImage']);
+    filters: {
+        short: (value) => {
+            if (!value) return;
+            value = value.toString();
+            if (value.length <= 50) return value;
+            return value.slice(0, 50) + "...";
 
-    // Array of variables sent to update series
-    fetch("http://localhost/api/series/updateSeries.php", {
-        method: 'POST',
-        headers: {
-            'UID': UID, 
-            'api-key': key,
-          },
-        body: formData,
-    }).then((response) => {
-        console.log(response);
-        setSeries();
-    })
-}))
+        }
+    },
 
-// Searches for specific series so that I can get the data that needs to be replaced with new data
-async function getSeries(UID) {
-    let series = await fetch("http://localhost/api/series/searchSeries.php?UID=" + UID);
-    let data = await series.json();
-    let seriesInfo = [];
-    seriesInfo['folder'] = data.Folder
-    seriesInfo['EImage'] = data.Image
+    mounted() {
+        // Puts the info for the series table into an array.
+        fetch("http://localhost/api/series/displaySeries.php")
+            .then(res => res.json())
+            .then(data => {
+                for (let i = 0; i < data.body.length; i++) {
+                    const element = data.body[i];
 
-    return seriesInfo;
-}
+                    this.SeriesInfo.push([{ uid: element.UID }, { title: element.Title }, { desc: element.Description }, { chapters: element.Chapters }, { folder: element.Folder }, { image: element.Image }]);
+                };
+            });
+    }
+});
 
-window.onload = setSeries();

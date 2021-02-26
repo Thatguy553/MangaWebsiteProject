@@ -10,6 +10,7 @@ session_start();
     <link rel="stylesheet" href="/../css/style.css">
     <meta name="description" content="Work-In-Progress Manga Website Template by Thatguy553.">
     <script src="https://kit.fontawesome.com/3926abc82e.js" crossorigin="anonymous"></script>
+    <script src="../vue.js"></script>
     <title>Home</title>
 </head>
 
@@ -41,7 +42,7 @@ session_start();
             ?>
 
         </nav>
-        <h3 id="vers">Version: 1.0.1</h3>
+        <h3 id="vers">Version: 1.0.3</h3>
     </header>
 
     <script>

@@ -4,12 +4,6 @@ if (!$header['api-key']) {
     print_r(["ERROR" => "ACCESS DENIED"]);
     exit;
 }
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
 include_once __DIR__ . '/../../config/database.php';
 include_once __DIR__ . '/../../class/series.php';
 
@@ -32,57 +26,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_tmp = $_FILES['files']['tmp_name'][0];
         $file_type = $_FILES['files']['type'][0];
         $file_size = $_FILES['files']['size'][0];
-        $file_ext = strtolower(end(explode('.', $file_name)));
+        $file_ext_start = explode('.', $file_name);
+        $file_ext = strtolower(end($file_ext_start));
 
         if (!in_array($file_ext, $extensions)) {
-            $errors[] = 'Extension not allowed: ' . $file_name . ' ' . $file_type;
+            $errors["ext"] += 'Extension not allowed: ' . $file_name . ' ' . $file_type;
         }
 
         if ($file_size > 15000000) {
-            $errors[] = 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
+            $errors["fileSize"] += 'File size exceeds limit: ' . $file_name . ' ' . $file_type;
         }
 
         // Moves file to folder
         if (empty($errors)) {
             $items->Image = $_FILES['files'];
             if ($items->insert()) {
-                print_r("Series Successfully Created");
+                echo json_encode(["series" => "created"]);
             } else {
-                print_r("Series Could not be Created");
+                echo json_encode(["series" => "error"]);
             }
         }
 
         if ($errors) {
-            print_r($errors);
-        }
-
-    }
-}
-
-function resize_image($file, $w, $h, $crop = false)
-{
-    list($width, $height) = getimagesize($file);
-    $r = $width / $height;
-    if ($crop) {
-        if ($width > $height) {
-            $width = ceil($width - ($width * abs($r - $w / $h)));
-        } else {
-            $height = ceil($height - ($height * abs($r - $w / $h)));
-        }
-        $newwidth = $w;
-        $newheight = $h;
-    } else {
-        if ($w / $h > $r) {
-            $newwidth = $h * $r;
-            $newheight = $h;
-        } else {
-            $newheight = $w / $r;
-            $newwidth = $w;
+            echo json_encode($errors);
         }
     }
-    $src = imagecreatefromjpeg($file);
-    $dst = imagecreatetruecolor($newwidth, $newheight);
-    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
-
-    return $dst;
 }
