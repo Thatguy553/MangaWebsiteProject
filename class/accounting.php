@@ -27,85 +27,129 @@ class Accounting
     public function login()
     {
 
-        $query = "SELECT * FROM " . $this->table . " WHERE username = ?";
-        $stmt = $this->conn->prepare($query);
+        // SQL
+        $checkSQL = "SELECT * FROM " . $this->table . " WHERE username = ?";
 
-        // Sanitize
+        // Preparation of SQL above
+        $chkStmt = $this->conn->prepare($checkSQL);
+
+        // Sanitization of user provided information
         $this->username = htmlspecialchars(strip_tags($this->username));
+        $this->password = htmlspecialchars(strip_tags($this->password));
 
-        // Bind
-        $stmt->bindParam(1, $this->username);
+        // Filter of user provided information
+        $this->username = filter_var($this->username, FILTER_SANITIZE_STRING);
+        $this->password = filter_var($this->password, FILTER_SANITIZE_STRING);
 
-        $stmt->execute();
+        // Bind user provided username to prepared SQL
+        $chkStmt->bindParam(1, $this->username);
 
-        if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if (password_verify($this->password, $row['password'])) {
 
-                $details = array(
-                    "UID" => $row['UID'],
-                    "user" => $row['username'],
-                    "role" => $row['role'],
-                    "API" => $row['APIAccess'],
-                    "Key" => $row['APIKey']
-                );
+        // Execute prepared and binded SQL
+        $chkStmt->execute();
 
-                return $details;
-            } else {
-                return false;
-            }
+        // Array returned from database fetch assigned to variable
+        $row = $chkStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return json_encode(['Error' => 'No Matches']);
         }
+
+        // Verify password with PHP method, this->password being the user provided password, $row['password'] being the password from the database
+        if (password_verify($this->password, $row['password']))
+            return $row;
+        else
+            return json_encode(['Error' => 'Incorrect Password']);
     }
 
     public function signup()
     {
-        $query = "INSERT INTO " . $this->table . " SET username = :user, password = :pass, role = :role";
-        $stmt = $this->conn->prepare($query);
+        // Predefined variables
+        $this->created = date('Y-m-d');
+        $this->APIAccess = 0;
+        $this->APIKey = '';
+
+        // Errors Array
+        $errors = [];
+
+        // SQL
+        $checkSQL = "SELECT * FROM " . $this->table . " WHERE username = ?";
+        $insertSQL = "INSERT INTO $this->table (username, password, role, created, APIAccess, APIKey) VALUES(?, ?, ?, ?, ?, ?)";
+
+        // Preparation
+        $chkStmt = $this->conn->prepare($checkSQL);
+        $insStmt = $this->conn->prepare($insertSQL);
 
         // Sanitize
         $this->username = htmlspecialchars(strip_tags($this->username));
         $this->password = htmlspecialchars(strip_tags($this->password));
         $this->role = htmlspecialchars(strip_tags($this->role));
 
-        // Hashing
+        // Filter
+        $this->username = filter_var($this->username, FILTER_SANITIZE_STRING);
+        $this->password = filter_var($this->password, FILTER_SANITIZE_STRING);
+        $this->role = filter_var($this->role, FILTER_SANITIZE_STRING);
+
+        // Hash Pass
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
 
-        // Bind
-        $stmt->bindParam(":user", $this->username);
-        $stmt->bindParam(":pass", $this->password);
-        $stmt->bindParam(":role", $this->role);
 
-        if ($stmt->execute()) {
-            return true;
+        // Bind
+        $chkStmt->bindParam(1, $this->username);
+
+        $insStmt->bindParam(1, $this->username);
+        $insStmt->bindParam(2, $this->password);
+        $insStmt->bindParam(3, $this->role);
+        $insStmt->bindParam(4, $this->created);
+        $insStmt->bindParam(5, $this->APIAccess);
+        $insStmt->bindParam(6, $this->APIKey);
+
+        $chkStmt->execute();
+
+        // Error Checks
+        if ($row = $chkStmt->fetch(PDO::FETCH_ASSOC)) {
+            $errors['Error'] = 'User Exists';
         }
-        return false;
+
+        if (!empty($errors)) {
+            return json_encode($errors);
+        }
+
+        if ($insStmt->execute())
+            return json_encode(['Signup' => 'success']);
     }
 
     public function search()
     {
-        $query = "SELECT UID, username, role, created, APIAccess, APIKey FROM " . $this->table . " WHERE username = :user OR UID = :user";
-        $stmt = $this->conn->prepare($query);
+        // SQL to decide where to select data from etc
+        $selectSQL = "SELECT * FROM $this->table WHERE username = :user";
 
-        // Sanitize
-        $this->UID = htmlspecialchars(strip_tags($this->UID));
+        // Preperation of SQL for variable binding and execution
+        $stmt = $this->conn->prepare($selectSQL);
 
-        // Bind
-        $stmt->bindParam(":user", $this->UID);
-        $stmt->execute();
+        // Sanitization and filtering incase of injection
+        $this->username = htmlspecialchars(strip_tags($this->username));
+        $this->username = filter_var($this->username, FILTER_SANITIZE_STRING);
 
-        if ($rows = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $this->UID = $rows['UID'];
-            $this->username = $rows['username'];
-            $this->role = $rows['role'];
-            $this->created = $rows['created'];
-            $this->APIAccess = $rows['APIAccess'];
-            $this->APIKey = $rows['APIKey'];
-        }
+        // Bind user provided data to SQL
+        $stmt->bindParam(":user", $this->username);
+
+        // execute SQL above and return database results or an error for no results
+        if ($stmt->execute())
+            return $stmt;
+        else
+            return json_encode(['Results' => 'None']);
     }
 
     public function display()
     {
-        $query = "SELECT * FROM " . $this->table;
-        $stmt = $this->conn->prepare($query);
+        // Select all the data from a certain database table
+        $selectSQL = "SELECT * FROM $this->table";
+
+        // Prepare the SQL string for exectution
+        $stmt = $this->conn->prepare($selectSQL);
+
+        // Exectute the SQL above and return the array should there be one.
         $stmt->execute();
         return $stmt;
     }

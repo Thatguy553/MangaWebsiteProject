@@ -4,8 +4,8 @@ include_once __DIR__ . '/header.php';
 <section id="signup-page">
     <h2>Signup</h2>
     <form id="signup-form" action="#" method="post">
-        <input type="text" class="signup-input" name="username" placeholder="Username..." required>
-        <input type="password" class="signup-input" name="password" placeholder="Password..." oninput="checkPass(this)"
+        <input type="text" class="signup-input" id="signup-username" name="username" placeholder="Username..." required>
+        <input type="password" class="signup-input" id="signup-password" name="password" placeholder="Password..."
             required>
         <input type="password" class="signup-input" name="password" placeholder="Re-Input Password..."
             oninput="checkPass(this)" required>

@@ -6,24 +6,24 @@ $db = new Database();
 $conn = $db->connect();
 
 $items = new Accounting($conn);
-$items->UID = $_POST['UID'];
+$items->username = $_POST['username'];
 
-$items->search();
+$results = $items->search();
 
-if ($items->UID != null) {
+if ($row = $results->fetch(PDO::FETCH_ASSOC)) {
     // Create Array
     $emp_arr = array(
-        "UID" => $items->UID,
-        "User" => $items->username,
-        "Created" => $items->created,
-        "Role" => $items->role,
-        "API" => $items->APIAccess,
-        "Key" => $items->APIKey
+        "UID" => $row['UID'],
+        "User" => $row['username'],
+        "Created" => $row['created'],
+        "Role" => $row['role'],
+        "API" => $row['APIAccess'],
+        "Key" => $row['APIKey']
     );
 
     http_response_code(200);
     echo json_encode($emp_arr);
 } else {
-    print_r("User not found.");
+    echo json_encode(["Results" => "No User Found"]);
     http_response_code(204);
 }

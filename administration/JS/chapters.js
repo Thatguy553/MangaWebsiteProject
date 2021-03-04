@@ -2,8 +2,74 @@
 const insertURL = '/../api/chapters/insert.php'
 const deleteURL = '/../api/chapters/delete.php'
 const updateURL = '/../api/chapters/update.php'
-const create = document.getElementById('create')
-const update = document.getElementById('update')
+
+let ChapterPage = new Vue({
+    data() {
+        return {
+            ChapterInfo: [],
+            CreateInfo: [],
+            uid: [],
+            headers: [],
+            UpdateInfo: [],
+            DisplayCreate: false,
+            DisplayUpdate: false,
+        }
+    },
+
+    mounted() {
+
+    },
+
+    filters: {
+        short: (value) => {
+            if (!value) return;
+            value = value.toString();
+            if (value.length <= 50) return value;
+            return value.slice(0, 50) + "...";
+
+        }
+    },
+
+    methods: {
+        create: function (params) {
+            const formData = new FormData();
+            const files = document.getElementById('create-zip').files;
+            const title = document.getElementById("create-title").value;
+            const series = document.getElementById("create-series").value;
+            const seriesNon = document.getElementById("create-series");
+            const folderID = seriesNon[seriesNon.selectedIndex].id;
+            const folder = document.getElementById(folderID).getAttribute("name");
+            const number = document.getElementById("create-number").value;
+
+            formData.append('files[]', files[0]);
+            formData.append('title', title);
+            formData.append('series', series);
+            formData.append('chnum', number);
+            formData.append("folder", folder);
+
+            fetch(insertURL, {
+                method: 'POST',
+                headers: {
+                    'UID': UID,
+                    'api-key': key,
+                },
+                body: formData,
+            })
+                .then(res => res.json())
+                .then((response) => {
+                    console.log(response)
+                })
+        },
+
+        remove: function (params) {
+
+        },
+
+        update: function (params) {
+
+        }
+    }
+});
 
 // Sends data from the create chapter inputs to an API endpoint to be created.
 create.addEventListener('submit', (e) => {
@@ -28,9 +94,9 @@ create.addEventListener('submit', (e) => {
     fetch(insertURL, {
         method: 'POST',
         headers: {
-            'UID': UID, 
+            'UID': UID,
             'api-key': key,
-          },
+        },
         body: formData,
     }).then((response) => {
         console.log(response)
@@ -48,9 +114,9 @@ function Delete(UID, Folder, Series) {
     fetch(deleteURL, {
         method: 'POST',
         headers: {
-            'UID': UID, 
+            'UID': UID,
             'api-key': key,
-          },
+        },
         body: formData,
     }).then((response) => {
         console.log(response);
@@ -104,7 +170,7 @@ function setChapters() {
                         "' name='" + data.body[i].Title +
                         "' value='" + data.body[i].UID + "'>" +
                         data
-                        .body[i].Title + "</option>"
+                            .body[i].Title + "</option>"
                 }
             } else {
                 let table = document.getElementById("Chapters");
@@ -143,9 +209,9 @@ update.addEventListener('submit', (async (e) => {
     fetch("/../api/chapters/update.php", {
         method: 'POST',
         headers: {
-            'UID': UID, 
+            'UID': UID,
             'api-key': key,
-          },
+        },
         body: formData,
     }).then((response) => {
         setChapters();
@@ -162,7 +228,7 @@ function getSeries() {
                 for (let i = 0; i < data.body.length; i++) {
                     document.getElementById("Cseries").innerHTML += "<option id='Sseries-" + i + "' name='" +
                         data.body[i]
-                        .Folder +
+                            .Folder +
                         "' value='" + data.body[i].UID + "'>" +
                         data.body[i].Title + "</option>"
                 }

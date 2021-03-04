@@ -12,6 +12,7 @@ let SeriesPage = new Vue({
     data() {
         return {
             SeriesInfo: [],
+            ChapterInfo: [],
             CreateInfo: [],
             uid: [],
             headers: [],

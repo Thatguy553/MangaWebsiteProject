@@ -12,14 +12,17 @@ $data = json_decode(file_get_contents("php://input"));
 $acc->username = $data->username;
 $acc->password = $data->password;
 
-if ($acc->login()) {
+if ($result = $acc->login()) {
     session_start();
-    $_SESSION['UID'] = $acc->login()['UID'];
-    $_SESSION['user'] = $acc->login()['user'];
-    $_SESSION['API'] = $acc->login()['API'];
-    $_SESSION['Key'] = $acc->login()['Key'];
-    $_SESSION['role'] = $acc->login()['role'];
-    return true;
+    $_SESSION['UID'] = $result['UID'];
+    $_SESSION['user'] = $result['username'];
+    $_SESSION['API'] = $result['APIAccess'];
+    $_SESSION['Key'] = $result['APIKey'];
+    $_SESSION['created'] = $result['created'];
+    $_SESSION['role'] = $result['role'];
+    $_SESSION['logout'] = "'false'";
+    $sessionArr = $_SESSION;
+    echo json_encode($sessionArr);
 } else {
-    return false;
+    echo json_encode(['login' => 'failed']);
 }

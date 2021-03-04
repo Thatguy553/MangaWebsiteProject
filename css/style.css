@@ -196,8 +196,8 @@ nav select {
 }
 
 .series-image {
-  max-width: 300px;
-  max-height: 400px;
+  width: 300px;
+  height: 400px;
 }
 
 /* Series Info Page */

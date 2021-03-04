@@ -13,8 +13,8 @@ $acc->username = $data->username;
 $acc->password = $data->password;
 $acc->role = "reader";
 
-if ($acc->signup()) {
-    print_r("Signup Successful!");
+if ($result = $acc->signup()) {
+    echo $result;
 } else {
-    print_r("Signup Failed...");
+    echo $result;
 }
