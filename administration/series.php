@@ -42,7 +42,7 @@ if ($_SESSION['role'] != "Admin") {
                 <td>Null</td>
             </tr>
         </table>
-        <p id="table-error"></p>
+        <p class="table-error">{{ error }}</p>
     </section>
 
     <!-- Create Series Form -->
@@ -76,11 +76,6 @@ if ($_SESSION['role'] != "Admin") {
     </section>
 </section>
 
-<script>
-let API = <?php echo $_SESSION['API']; ?>;
-let UID = <?php echo $_SESSION['UID']; ?>;
-let key = "<?php echo $_SESSION['Key']; ?>";
-</script>
 <script src="http://localhost/administration/JS/series.js"></script>
 
 <?php

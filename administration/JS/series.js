@@ -2,10 +2,9 @@
 const insertURL = 'http://localhost/api/series/insertSeries.php';
 const deleteURL = 'http://localhost/api/series/deleteSeries.php';
 const updateURL = 'http://localhost/api/series/updateSeries.php';
-
-if (API == 0) {
-    window.phpLoadFile()
-}
+let key = localStorage['api_key'];
+let API = localStorage['api'];
+let UID = localStorage['uid'];
 
 let SeriesPage = new Vue({
     el: "#series-admin",
@@ -19,10 +18,26 @@ let SeriesPage = new Vue({
             UpdateInfo: [],
             DisplayCreate: false,
             DisplayUpdate: false,
+            error: ""
         }
     },
 
     methods: {
+        set: function (params) {
+            if (this.SeriesInfo) {
+                this.SeriesInfo = [];
+            }
+            fetch("http://localhost/api/series/displaySeries.php")
+                .then(res => res.json())
+                .then(data => {
+                    for (let i = 0; i < data.body.length; i++) {
+                        const element = data.body[i];
+
+                        this.SeriesInfo.push([{ uid: element.UID }, { title: element.Title }, { desc: element.Description }, { chapters: element.Chapters }, { folder: element.Folder }, { image: element.Image }]);
+                    };
+                });
+        },
+
         create: function (event) {
             let title = document.getElementById("create-title").value;
             let description = document.getElementById("create-description").value;
@@ -43,20 +58,18 @@ let SeriesPage = new Vue({
             })
                 .then(res => res.json())
                 .then((response) => {
-                    console.log(response);
                     if (response.series == "created") {
-                        document.getElementById("table-error").innerHTML = "Series Created. <br/> If you wish to delete the newly created series, refresh the page.";
-                        document.getElementById("table-error").style.color = "green";
-                        this.SeriesInfo.push([{ uid: null }, { title: title }, { desc: description }, { chapters: 0 }]);
+                        this.error = "Series Created.";
+
+                        this.set();
                     } else {
-                        document.getElementById("table-error").style.color = "red";
-                        document.getElementById("table-error").innerHTML = "Series Could Not Be Created.";
+
+                        this.error = "Series Could Not Be Created.";
                     }
                 });
         },
 
         remove: function (uid) {
-            console.log(uid);
 
             const formData = new FormData();
             formData.append('uid', uid)
@@ -70,14 +83,12 @@ let SeriesPage = new Vue({
             })
                 .then(res => res.json())
                 .then((response) => {
-                    console.log(this.SeriesInfo.indexOf(uid));
                     if (response.series == "deleted") {
-                        document.getElementById("table-error").innerHTML = "Series Was Deleted";
-                        document.getElementById("table-error").style.color = "lightgreen";
-                        this.SeriesInfo.splice(this.SeriesInfo.indexOf(uid), 1);
+                        this.error = "Series Was Deleted";
+                        this.set();
                     } else {
-                        document.getElementById("table-error").style.color = "red";
-                        document.getElementById("table-error").innerHTML = "Series Could Not Be Deleted";
+
+                        this.error = "Series Could Not Be Deleted";
                     }
                 })
         },
@@ -97,7 +108,6 @@ let SeriesPage = new Vue({
                 }
             }
             let ExistingInfo = this.SeriesInfo[index];
-            console.log(ExistingInfo[4]);
             // Variables added to array to be sent back
             formData.append('files[]', Images[0]);
             formData.append('uid', UID);
@@ -116,13 +126,13 @@ let SeriesPage = new Vue({
             })
                 .then(res => res.json())
                 .then((response) => {
-                    console.log(response);
                     if (response.series == "updated") {
-                        document.getElementById("table-error").style.color = "green";
-                        document.getElementById("table-error").innerHTML = "Series Was Updated. Refresh to see new info.";
+
+                        this.error = "Series Was Updated.";
+                        this.set();
                     } else {
-                        document.getElementById("table-error").style.color = "red";
-                        document.getElementById("table-error").innerHTML = "Series Could Not Be Updated";
+
+                        this.error = "Series Could Not Be Updated";
                     }
                 })
         },
@@ -140,15 +150,7 @@ let SeriesPage = new Vue({
 
     mounted() {
         // Puts the info for the series table into an array.
-        fetch("http://localhost/api/series/displaySeries.php")
-            .then(res => res.json())
-            .then(data => {
-                for (let i = 0; i < data.body.length; i++) {
-                    const element = data.body[i];
-
-                    this.SeriesInfo.push([{ uid: element.UID }, { title: element.Title }, { desc: element.Description }, { chapters: element.Chapters }, { folder: element.Folder }, { image: element.Image }]);
-                };
-            });
+        this.set();
     }
 });
 

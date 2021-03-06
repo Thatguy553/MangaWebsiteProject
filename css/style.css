@@ -433,17 +433,20 @@ nav select {
   margin: 5px;
   width: 70%;
   border-radius: 5px;
-  border: rgb(59, 59, 59) 1px solid;
+  border: rgb(63, 63, 63) 2px solid;
   background-color: #555;
   outline: none;
+  color: #ababab;
+  font-size: 1rem;
 }
 
 .login-input:focus {
-  border: rgb(59, 59, 59) 2px solid;
+  border: rgb(63, 63, 63) 3px solid;
 }
 
 .login-input::placeholder {
-  color: #242323;
+  color: #ababab;
+  font-size: 1rem;
 }
 
 #login-submit {
@@ -480,17 +483,20 @@ nav select {
   margin: 5px;
   width: 70%;
   border-radius: 5px;
-  border: rgb(59, 59, 59) 1px solid;
+  border: rgb(63, 63, 63) 2px solid;
   background-color: #555;
   outline: none;
+  color: #ababab;
+  font-size: 1rem;
 }
 
 .signup-input:focus {
-  border: rgb(59, 59, 59) 2px solid;
+  border: rgb(59, 59, 59) 3px solid;
 }
 
 .signup-input::placeholder {
-  color: #242323;
+  color: #ababab;
+  font-size: 1rem;
 }
 
 #signup-submit {
@@ -615,6 +621,128 @@ nav select {
     width: 90%;
   }
   #update-series-form {
+    width: 90%;
+  }
+}
+
+/* Chapters admin page css */
+
+#chapters-admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#chapters-info-table {
+  width: 80%;
+}
+
+#chapters {
+  width: 100%;
+}
+
+#chapters, #chapters td, #chapters th {
+  border: 1px solid rgb(59, 59, 59);
+  border-collapse: collapse;
+}
+
+#chapters td, #chapters th {
+  text-align: center;
+  padding: 5px;
+}
+
+#admin-buttons {
+  width: 80%;
+  margin: .5rem;
+}
+
+#admin-buttons button {
+  padding: 5px;
+  margin: 0.2rem;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+#chapters-info-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+#create-chapter-form {
+  z-index: 1;
+  top: 10rem;
+  float: left;
+  position: absolute;
+  background-color: #333333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  width: 40%;
+}
+
+#create {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#create input {
+  width: 90%;
+  padding: 7px;
+  margin: .5rem;
+}
+
+#create textarea {
+  padding: 4px;
+  width: 90%;
+}
+
+#update-chapter-form {
+  z-index: 1;
+  top: 10rem;
+  float: left;
+  position: absolute;
+  background-color: #333333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  width: 40%;
+}
+
+#update {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#update input {
+  width: 90%;
+  padding: 7px;
+  margin: .5rem;
+}
+
+#update textarea, #update select {
+  padding: 4px;
+  width: 90%;
+  margin: .5rem;
+}
+
+@media screen and (max-width: 600px) {
+  #create-chapter-form {
+    width: 90%;
+  }
+  #update-chapter-form {
     width: 90%;
   }
 }

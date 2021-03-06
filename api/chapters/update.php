@@ -16,6 +16,7 @@ $items = new Chapters($conn);
 // Variables Assigned for series class via POST
 $items->UID = $_POST['uid'];
 $items->ChNum = $_POST['chnum'];
+$items->Title = $_POST['title'];
 
 if ($items->update()) {
     echo json_encode(["chapter" => "updated"]);
