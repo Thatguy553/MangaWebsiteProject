@@ -65,12 +65,11 @@ function Login() {
     })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
-            localStorage['uid'] = data.UID;
-            localStorage['username'] = data.user;
-            localStorage['api'] = data.API;
-            localStorage['api_key'] = data.Key;
-            localStorage['role'] = data.role;
+            document.cookie = `uid=${data.UID};`;
+            document.cookie = `username=${data.user};`;
+            document.cookie = `api=${data.API};`;
+            document.cookie = `api_key=${data.Key};`;
+            document.cookie = `role=${data.role};`;
             window.location = "http://localhost/";
         })
 }

@@ -5,6 +5,24 @@ session_start();
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>
+    (function(w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start': new Date().getTime(),
+            event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s),
+            dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-M6ST47K');
+    </script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/../css/style.css">
@@ -20,6 +38,10 @@ let logout = <?php echo  $_SESSION['logout']  ?? "'false'"; ?>;
 </script>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M6ST47K" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <header id="header">
         <nav class="pub-nav" id="pub-nav">
             <h1>Magic Mushrooms</h1>
@@ -38,7 +60,7 @@ let logout = <?php echo  $_SESSION['logout']  ?? "'false'"; ?>;
                 <a href="/adminChapters" class="nav-item">Chapters</a>
             </div>
         </nav>
-        <h3 id="vers">Version: 1.0.3</h3>
+        <h3 id="vers">Version: 1.0.4</h3>
     </header>
 
     <script>

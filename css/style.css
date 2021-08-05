@@ -163,6 +163,47 @@ nav select {
   }
 }
 
+/* Home Page CSS */
+#home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#recents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 70%;
+}
+
+.recent-items {
+  margin: 1rem;
+  color: #ababab;
+  text-decoration: none;
+}
+
+.chapter-info {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 1.2rem;
+  margin: 0.3rem;
+  width: 100%;
+}
+
+.chapter-image {
+  width: 300px;
+  height: 400px;
+}
+
+#links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 25%;
+}
+
 /* Series List Section */
 #series-page {
   display: flex;

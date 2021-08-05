@@ -1,8 +1,8 @@
 <?php
+date_default_timezone_set("America/New_York");
 // Begin Chapter Class
 class Chapters
 {
-
     // DB Connection
     private $conn;
 
@@ -18,7 +18,7 @@ class Chapters
     public $Pages;
     public $Folder;
     public $ExistingFolder;
-
+    public $created;
     // Connecting...
     public function __construct($db)
     {
@@ -36,8 +36,9 @@ class Chapters
 
     public function insert()
     {
+        $this->created = date("Y-m-d h:i");
         $this->Folder = uniqid('chapter_');
-        $query = "INSERT INTO " . $this->table . " SET series = :series, Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder, seriesFolder = :sfolder";
+        $query = "INSERT INTO " . $this->table . " SET series = :series, Title = :title, ChNum = :chnum, Pages = :pages, Folder = :folder, seriesFolder = :sfolder, created = :created";
         $stmt = $this->conn->prepare($query);
 
         // Sanitize
@@ -55,6 +56,7 @@ class Chapters
         $stmt->bindParam(":pages", $this->Pages);
         $stmt->bindParam(":folder", $this->Folder);
         $stmt->bindParam(":sfolder", $this->ExistingFolder);
+        $stmt->bindParam(":created", $this->created);
 
         // Change to mkdir inside of the series that chapter is for, then move the .rar to the directory for the chapter, extract it, delete the rar, and insert into the database
         if (mkdir(__DIR__ . "/../series/" . $this->ExistingFolder . "/" . $this->Folder)) {
@@ -69,13 +71,13 @@ class Chapters
                         if ($stmt->execute()) {
                             return true;
                         } else {
-                            print_r("Execute Failed.");
+                            echo json_encode("Execute Failed.");
                         }
                     } else {
-                        print_r("Extract To Failed.");
+                        echo json_encode("Extract To Failed.");
                     }
                 } else {
-                    print_r("Zip Open Failed.");
+                    echo json_encode("Zip Open Failed.");
                 }
             } else {
                 rmdir(__DIR__ . "/../series/" . $this->Folder);
@@ -86,7 +88,8 @@ class Chapters
 
     public function update()
     {
-        $query = "UPDATE " . $this->table . " SET Title = :title, ChNum = :chnum WHERE UID = :uid";
+        $this->created = date("Y-m-d h:i");
+        $query = "UPDATE " . $this->table . " SET Title = :title, ChNum = :chnum, created = :created WHERE UID = :uid";
         $stmt = $this->conn->prepare($query);
 
         // Sanitization
@@ -98,6 +101,7 @@ class Chapters
         $stmt->bindParam(":uid", $this->UID);
         $stmt->bindParam(":chnum", $this->ChNum);
         $stmt->bindParam(":title", $this->Title);
+        $stmt->bindParam(":created", $this->created);
 
         if ($stmt->execute()) {
             return true;
@@ -194,5 +198,14 @@ class Chapters
 
         // array_push($arr, $this->Folder, $this->ExistingFolder);
         return $arr;
+    }
+
+    // Date and time will be formatted like 3/6/2021 5:51
+    public function recents()
+    {
+        $query = "SELECT * FROM $this->table ORDER BY Created desc LIMIT 20";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt;
     }
 }
